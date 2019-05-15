@@ -1,25 +1,15 @@
-# Windows thumbnail cache files
-Thumbs.db
-ehthumbs.db
-ehthumbs_vista.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# =========================
-# Operating System Files
-# =========================
-/Debug/
-/Release/
+Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.d
+*.o
+Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.su
+*.d
+Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.su
+*.su
+Debug/objects.list
+Debug/Otto_DIY.elf
+Debug/Startup/subdir.mk
+Debug/Otto_DIY.list
+*.list
+*.mk
+.settings/language.settings.xml
+Debug/makefile
+Debug/Otto_DIY.map
