@@ -266,7 +266,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	//echo for debuging
 	CDC_Transmit_FS(Buf,Len);
 	//CDC_Transmit_FS(atoll(Buf),1);
-	TIM2->CCR1 = atoll(Buf);
+	set_servo_position(0,(type_phi)atoll(Buf));
 	/*if(Buf[0] == '1')
 		//do something*/
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);

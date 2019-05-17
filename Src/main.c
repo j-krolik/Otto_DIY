@@ -70,6 +70,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
+  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -92,11 +93,13 @@ int main(void)
   MX_USB_DEVICE_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  Servo_Init();
  // HAL_TIM_PWM_Start (&htim2, TIM_CHANNEL_1);
   //HAL_TIM_PWM_Start (&htim2, TIM_CHANNEL_2);
-  //HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -107,7 +110,16 @@ int main(void)
 	//  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1,1000);
 	/*TIM2->CCR1 = 1500;
 	TIM2->CCR2 = 1500;*/
-	HAL_Delay(1000);
+	//set_motion_prm_n(&(get_servo(0)->prm), 100, 300 , 0, 0);
+	cal_moution_parameters(0, 2400);
+	while((get_servo(0)->prm).in_motion != 0)
+	HAL_Delay(500);
+	while(1);
+
+	//set_motion_prm_n(&(get_servo(0)->prm), 100, 300 , 0, 1);
+	cal_moution_parameters(0, 1500);
+	while((get_servo(0)->prm).in_motion != 0)
+	HAL_Delay(500);
 
     /* USER CODE END WHILE */
 
