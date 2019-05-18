@@ -27,14 +27,28 @@
 
 #define number_of_servos 4
 #define def_n_min 1
-#define def_omega_max 54 //5,4 degrees per time_base (20ms)
-#define def_alpha_max 10 //1,0 degrees per timbe_base squared (20_ms)^2
+#define def_omega_max 1000 //5,4 degrees per time_base (20ms)
+#define def_alpha_max 250 //1,0 degrees per timbe_base squared (20_ms)^2
 
 #define type_n uint32_t
 #define type_phi uint32_t
 #define type_theta int32_t
 #define type_omega int32_t
 #define type_alpha int32_t
+
+typedef struct{
+	 _Bool in_motion;
+	type_n n_current;
+	type_omega omega_enh;
+	uint32_t *timer_set_position;
+}Motion_prm_it;
+
+typedef struct{
+	type_n n_max1;
+	type_n n_max2;
+	type_n n_max3;
+	type_theta alpha_enh;
+}Motion_prm;
 
 typedef struct {
 	type_phi phi_min_enh;
@@ -43,22 +57,12 @@ typedef struct {
 }Position_range;
 
 typedef struct{
-	volatile _Bool in_motion;
-	//volatile type_phi phi_current_enh;
+	//parameters changinge when motion
+	volatile Motion_prm_it prm_it;
 	//calculated parameters before motion
-	type_n n_max1;
-	type_n n_max2;
-	type_n n_max3;
-	type_theta alpha_enh;
-	//parameters calculating when motion
-	volatile type_n n_current;
-	volatile type_omega omega_enh;
-}Motion_prm;
-
-typedef struct{
-	Position_range range;
 	Motion_prm prm;
-	volatile uint32_t *timer_set_position;
+	//const parameters
+	Position_range range;
 }Servo;
 
 typedef struct{
@@ -75,6 +79,6 @@ void set_servo_position(uint8_t servo_number, type_phi positon);
 
 //for debug
 Servo* get_servo(uint8_t number);
-void set_motion_prm_n(Motion_prm *_motion_prm, type_theta theta_eth, type_n n_acc, type_n n_const, _Bool change_theta_sign);
+void set_motion_prm_n(Servo *servo, type_theta theta_eth, type_n n_acc, type_n n_const, _Bool change_theta_sign);
 
 #endif /* SERVO_H_ */

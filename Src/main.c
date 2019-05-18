@@ -111,14 +111,16 @@ int main(void)
 	/*TIM2->CCR1 = 1500;
 	TIM2->CCR2 = 1500;*/
 	//set_motion_prm_n(&(get_servo(0)->prm), 100, 300 , 0, 0);
-	cal_moution_parameters(0, 2400);
-	while((get_servo(0)->prm).in_motion != 0)
+	cal_moution_parameters(0, 2500);
+	set_servo_position(1, 2500);
+	while((get_servo(0)->prm_it.in_motion) != 0);
 	HAL_Delay(500);
-	while(1);
+	//while(1);
 
 	//set_motion_prm_n(&(get_servo(0)->prm), 100, 300 , 0, 1);
 	cal_moution_parameters(0, 1500);
-	while((get_servo(0)->prm).in_motion != 0)
+	set_servo_position(1, 1500);
+	while((get_servo(0)->prm_it.in_motion) != 0);
 	HAL_Delay(500);
 
     /* USER CODE END WHILE */
