@@ -94,41 +94,23 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   servo_init();
- // HAL_TIM_PWM_Start (&htim2, TIM_CHANNEL_1);
-  //HAL_TIM_PWM_Start (&htim2, TIM_CHANNEL_2);
-  HAL_TIM_Base_Start_IT(&htim2);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+  tim_2_start();
 
   servo_set_calc_param(0,0,50,0);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-	//  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1,1000);
-	/*TIM2->CCR1 = 1500;
-	TIM2->CCR2 = 1500;*/
-	//set_motion_prm_n(&(get_servo(0)->prm), 100, 300 , 0, 0);
 	servo_set_position(0, 2500);
 	servo_set_position_direct(1, 2500);
-	TIM2->CCR3 = 2500;
 	while((get_servo(0)->prm_it.in_motion) != 0);
-	HAL_Delay(500);
-	//while(1);
 
-	//set_motion_prm_n(&(get_servo(0)->prm), 100, 300 , 0, 1);
 	servo_set_position(0, 1500);
 	servo_set_position_direct(1, 1500);
-	TIM2->CCR3 = 1500;
 	while((get_servo(0)->prm_it.in_motion) != 0);
 	HAL_Delay(500);
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

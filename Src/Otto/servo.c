@@ -5,16 +5,14 @@
  *      Author: Jarosław Królik
  */
 
-#include "servo.h"
+#include <Otto/servo.h>
 #include "stdbool.h" //_Bool
 #include "math.h" //sqrt
 #include "tim.h"
 
-#define square(_param_) (_param_*_param_)
-
-
 inline type_phi get_servo_position_enh(Servo *_servo);
 
+#define square(_param_) (_param_*_param_)
 #define servo_range_pos(number,param) servo_ ## number ## _range_pos_ ## param
 
 Motion_calculation_prm default_calculation_prm;
