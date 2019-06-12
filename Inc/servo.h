@@ -28,7 +28,20 @@
 #define number_of_servos 4
 #define def_n_min 1
 #define def_omega_max 1000 //5,4 degrees per time_base (20ms)
-#define def_alpha_max 250 //1,0 degrees per timbe_base squared (20_ms)^2
+#define def_alpha_max 100 //1,0 degrees per timbe_base squared (20_ms)^2
+
+#define servo_0_range_pos_min 625
+#define servo_0_range_pos_mid 1500
+#define servo_0_range_pos_max 2500
+#define servo_1_range_pos_min 625
+#define servo_1_range_pos_mid 1500
+#define servo_1_range_pos_max 2500
+#define servo_2_range_pos_min 625
+#define servo_2_range_pos_mid 1500
+#define servo_2_range_pos_max 2500
+#define servo_3_range_pos_min 625
+#define servo_3_range_pos_mid 1500
+#define servo_3_range_pos_max 2500
 
 #define type_n uint32_t
 #define type_phi uint32_t
@@ -48,7 +61,13 @@ typedef struct{
 	type_n n_max2;
 	type_n n_max3;
 	type_theta alpha_enh;
-}Motion_prm;
+}Motion_calcuated_prm;
+
+typedef struct{
+	type_n n_min;
+	type_omega omega_max_enh;
+	type_alpha alpha_max_enh;
+}Motion_calculation_prm;
 
 typedef struct {
 	type_phi phi_min_enh;
@@ -59,23 +78,31 @@ typedef struct {
 typedef struct{
 	//parameters changinge when motion
 	volatile Motion_prm_it prm_it;
+	//parameters of calculation
+	Motion_calculation_prm calculation_prm;
 	//calculated parameters before motion
-	Motion_prm prm;
+	Motion_calcuated_prm calcuated_prm;
 	//const parameters
 	Position_range range;
 }Servo;
 
-typedef struct{
-	type_n n_min;
-	type_omega omega_max_enh;
-	type_alpha alpha_max_enh;
-}Motion_max;
+/*
+ * Servo initialization
+ */
+void servo_init();
 
+/*
+ * Servo timer handler
+ */
+void servo_timer_step_handler();
+/*
+ * If 0 -> set default parameter
+ */
+void servo_set_calc_param(uint8_t servo_number, type_n n_min, type_alpha alpha_max, type_omega omega_max);
 
-void Servo_Init();
-void Servo_next_step();
-int8_t cal_moution_parameters(uint8_t servo_number, type_phi phi_set_enh);
-void set_servo_position(uint8_t servo_number, type_phi positon);
+int8_t servo_set_position(uint8_t servo_number, type_phi phi_set);
+
+void servo_set_position_direct(uint8_t servo_number, type_phi positon);
 
 //for debug
 Servo* get_servo(uint8_t number);

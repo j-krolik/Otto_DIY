@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=D:/Jose/OneDrive - Politechnika Warszawska/Engineering/Workspace/STM32_workspace/Otto_DIY/Inc
+HeaderPath=D:/Jose/OneDrive - Politechnika Warszawska/Engineering/Workspace/STM32_workspace/PW/Otto_DIY/Inc
 HeaderFiles=stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;gpio.h;tim.h;usb_device.h;usbd_conf.h;usbd_desc.h;usbd_cdc_if.h;
-SourcePath=D:/Jose/OneDrive - Politechnika Warszawska/Engineering/Workspace/STM32_workspace/Otto_DIY/Src
+SourcePath=D:/Jose/OneDrive - Politechnika Warszawska/Engineering/Workspace/STM32_workspace/PW/Otto_DIY/Src
 SourceFiles=stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;gpio.c;tim.c;usb_device.c;usbd_conf.c;usbd_desc.c;usbd_cdc_if.c;
 
 [PreviousLibFiles]
