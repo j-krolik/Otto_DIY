@@ -30,20 +30,22 @@
 #define def_omega_max 1000 //5,4 degrees per time_base (20ms)
 #define def_alpha_max 100 //1,0 degrees per timbe_base squared (20_ms)^2
 
-#define servo_0_range_pos_min 625
-#define servo_0_range_pos_mid 1500
-#define servo_0_range_pos_max 2500
-#define servo_1_range_pos_min 625
+#define servo_0_range_pos_min 580
+#define servo_0_range_pos_mid 1430
+#define servo_0_range_pos_max 2410
+#define servo_1_range_pos_min 630
 #define servo_1_range_pos_mid 1500
-#define servo_1_range_pos_max 2500
-#define servo_2_range_pos_min 625
-#define servo_2_range_pos_mid 1500
-#define servo_2_range_pos_max 2500
-#define servo_3_range_pos_min 625
-#define servo_3_range_pos_mid 1500
-#define servo_3_range_pos_max 2500
+#define servo_1_range_pos_max 2460
+#define servo_2_range_pos_min 620
+#define servo_2_range_pos_mid 1430
+#define servo_2_range_pos_max 2410
+#define servo_3_range_pos_min 640
+#define servo_3_range_pos_mid 1480
+#define servo_3_range_pos_max 2420
+#define __servo_range_pos(number,param) servo_ ## number ## _range_pos_ ## param
 
 #define type_n uint32_t
+#define type_angle int16_t
 #define type_phi uint32_t
 #define type_theta int32_t
 #define type_omega int32_t
@@ -93,14 +95,18 @@ void servo_init();
 
 /*
  * Servo timer handler
+ *
+ * return information with servos is free
+ * (least signified bit is servo number 0, next bit is servo number 1...)
  */
-void servo_timer_step_handler();
+void servo_step_timer_handler(volatile uint8_t *free_servos);
 /*
  * If 0 -> set default parameter
  */
 void servo_set_calc_param(uint8_t servo_number, type_n n_min, type_alpha alpha_max, type_omega omega_max);
 
-int8_t servo_set_position(uint8_t servo_number, type_phi phi_set);
+int8_t servo_set_position(uint8_t servo_number, type_angle angle_set);
+int8_t servo_set_position_phi(uint8_t servo_number, type_phi phi_set);
 
 void servo_set_position_direct(uint8_t servo_number, type_phi positon);
 

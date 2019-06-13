@@ -264,9 +264,13 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
 	//echo for debuging
-	CDC_Transmit_FS(Buf,Len);
+	CDC_Transmit_FS(Buf,*Len);
 	//CDC_Transmit_FS(atoll(Buf),1);
-	servo_set_position(0,(type_phi)atoll(Buf));
+	type_phi pos = (type_phi)atoll((char*)Buf);
+	servo_set_position_direct(0,pos);
+	servo_set_position_direct(1,pos);
+	servo_set_position_direct(2,pos);
+	servo_set_position_direct(3,pos);
 	/*if(Buf[0] == '1')
 		//do something*/
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
@@ -297,7 +301,7 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
   if (hcdc->TxState != 0){
     return USBD_BUSY;
   }
-  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, strlen(Buf));
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, strlen((char*)Buf));
   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
   /* USER CODE END 7 */
   return result;

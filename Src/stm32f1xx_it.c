@@ -224,12 +224,12 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE END EXTI9_5_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
-  char text[] = "Pressed button\n\r";
-  CDC_Transmit_FS(text,strlen(text));
+  uint8_t text[] = "Pressed button\n\r";
+  CDC_Transmit_FS(text,strlen((char*)text));
 
 	//TIM2->CCR1 = 1500;
-  servo_set_position(0,1500);
-  servo_set_position(1,1500);
+  servo_set_position_phi(0,1500);
+  servo_set_position_phi(1,1500);
 
 
   /* USER CODE END EXTI9_5_IRQn 1 */
@@ -241,8 +241,11 @@ void EXTI9_5_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1); //diode on evaluation board
-	servo_timer_step_handler();
+  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1); //diode on evaluation board
+  //
+  __IO uint8_t freeServos;
+  servo_step_timer_handler(&freeServos);
+
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
