@@ -57,6 +57,7 @@ LegTypeDef *limbs_getLeg(LegNumTypeDef legNum){
 	switch (legNum){
 	case LegLeft: return &(Legs.left);
 	case LegRight: return &(Legs.right);
+	case LegError: return 0;
 	}
 	return 0;
 }

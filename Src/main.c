@@ -112,17 +112,29 @@ int main(void)
 	limbs_setHipPositon(LegRight,0);
 	HAL_Delay(500);
 
-	limbs_setAnklePositon(LegLeft,0);
-	limbs_setAnklePositon(LegRight,0);
-	limbs_setHipPositon(LegLeft,0);
-	limbs_setHipPositon(LegRight,0);
-	HAL_Delay(500);
+	limbs_setAnklePositon(LegLeft,-25);
+	limbs_setAnklePositon(LegRight,10);
+	HAL_Delay(100);
+	limbs_setHipPositon(LegRight,-30);
+	HAL_Delay(200);
 
 	limbs_setAnklePositon(LegLeft,0);
 	limbs_setAnklePositon(LegRight,0);
-	limbs_setHipPositon(LegLeft,0);
+	HAL_Delay(100);
 	limbs_setHipPositon(LegRight,0);
-	HAL_Delay(500);
+	HAL_Delay(200);
+
+	limbs_setAnklePositon(LegLeft,10);
+	limbs_setAnklePositon(LegRight,-25);
+	HAL_Delay(100);
+	limbs_setHipPositon(LegLeft,-30);
+	HAL_Delay(200);
+
+	limbs_setAnklePositon(LegLeft,0);
+	limbs_setAnklePositon(LegRight,0);
+	HAL_Delay(100);
+	limbs_setHipPositon(LegLeft,0);
+	HAL_Delay(200);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
