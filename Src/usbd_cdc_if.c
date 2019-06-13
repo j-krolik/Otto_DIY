@@ -23,7 +23,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "debug.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -266,11 +266,12 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	//echo for debuging
 	CDC_Transmit_FS(Buf,*Len);
 	//CDC_Transmit_FS(atoll(Buf),1);
-	type_phi pos = (type_phi)atoll((char*)Buf);
+	/*type_phi pos = (type_phi)atoll((char*)Buf);
 	servo_set_position_direct(0,pos);
 	servo_set_position_direct(1,pos);
 	servo_set_position_direct(2,pos);
-	servo_set_position_direct(3,pos);
+	servo_set_position_direct(3,pos);*/
+	otto_debugHandler(Buf, Len);
 	/*if(Buf[0] == '1')
 		//do something*/
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);

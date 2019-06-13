@@ -10,7 +10,7 @@
 //LegTypeDef Legs[2];
 LegsTypeDef Legs;
 
-LegTypeDef *limbs_getLeg(LegNumTypeDef legNum);
+
 
 void limbs_init(){
 	servo_init();
@@ -51,7 +51,6 @@ void limbs_setHipPositon(LegNumTypeDef legNum, int16_t angle){
 	angle *= leg->hip.servoDirection;
 	servo_set_position(leg->hip.servoNum, (type_angle)angle);
 }
-
 
 
 LegTypeDef *limbs_getLeg(LegNumTypeDef legNum){

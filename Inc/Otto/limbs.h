@@ -11,9 +11,16 @@
 #include "stdint.h" //uint8_t
 
 typedef enum{
-	LegLeft  = 0x0u,
-	LegRight = 0x1u
+	LegLeft  = 0x1u,
+	LegRight = 0x2u,
+	LegError = 0x3u
 }LegNumTypeDef;
+
+typedef enum{
+	JoinAnkle = 0x0u,
+	JoinHip	  = 0x1u,
+	JoinError = 0x2u,
+}JointNumTypeDef;
 
 typedef struct{
 	uint8_t servoNum;
@@ -43,5 +50,8 @@ typedef struct{
 void limbs_init();
 void limbs_setAnklePositon(LegNumTypeDef legNum, int16_t angle);
 void limbs_setHipPositon(LegNumTypeDef legNum, int16_t angle);
+
+//debug
+LegTypeDef *limbs_getLeg(LegNumTypeDef legNum);
 
 #endif /* OTTO_LIMBS_H_ */
