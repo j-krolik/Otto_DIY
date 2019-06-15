@@ -27,21 +27,21 @@
 
 #define number_of_servos 4
 #define def_n_min 1
-#define def_omega_max 1000 //5,4 degrees per time_base (20ms)
-#define def_alpha_max 100 //1,0 degrees per timbe_base squared (20_ms)^2
+#define def_omega_max 120 // degrees*10 per time_base (20ms)	60degrees/0,1s
+#define def_alpha_max  60 // degrees*10 per timbe_base squared (20_ms)^2
 
-#define servo_0_range_pos_min 580
-#define servo_0_range_pos_mid 1430
-#define servo_0_range_pos_max 2410
-#define servo_1_range_pos_min 630
-#define servo_1_range_pos_mid 1500
-#define servo_1_range_pos_max 2460
-#define servo_2_range_pos_min 620
-#define servo_2_range_pos_mid 1430
-#define servo_2_range_pos_max 2410
-#define servo_3_range_pos_min 640
-#define servo_3_range_pos_mid 1480
-#define servo_3_range_pos_max 2420
+#define servo_0_range_pos_min	 580
+#define servo_0_range_pos_mid	1430
+#define servo_0_range_pos_max	2410
+#define servo_1_range_pos_min	 630
+#define servo_1_range_pos_mid	1500
+#define servo_1_range_pos_max	2460
+#define servo_2_range_pos_min	 620
+#define servo_2_range_pos_mid	1430
+#define servo_2_range_pos_max	2410
+#define servo_3_range_pos_min	 640
+#define servo_3_range_pos_mid	1480
+#define servo_3_range_pos_max	2420
 
 #define type_n		int32_t
 #define type_angle	int16_t

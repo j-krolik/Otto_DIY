@@ -9,7 +9,6 @@
 #define OTTO_LIMBS_H_
 
 #include "stdint.h" //uint8_t
-#include "servo.h"
 
 typedef enum{
 	LimbOK		= 0x0u,
@@ -28,6 +27,14 @@ typedef enum{
 	JointHip	= 0x2u,
 	JointError	= 0x0u
 }JointNumTypeDef;
+
+typedef enum{
+	LimbSpeedVeryFast	= 0x0u,
+	LimbSpeedFast		= 0x1u,
+	LimbSpeedNormal		= 0x2u,
+	LimbSpeedSlow		= 0x3u,
+	LimbSpeedVerySlow	= 0x4u
+}LimbSpeedTypeDef;
 
 typedef struct{
 	uint8_t servoNum;
@@ -61,7 +68,7 @@ void limbs_init();
 void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
 void limbs_setPositonSingle(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
 LimbStatusTypeDef limbs_getStatus(LegNumTypeDef legNum, JointNumTypeDef jointNum);
-//debug
-//void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef JointNum,???);
+void limbs_changeSpeed(LegNumTypeDef legNum, JointNumTypeDef jointNum, LimbSpeedTypeDef speed);
+void limbs_changeSpeedPercentage(LegNumTypeDef legNum, JointNumTypeDef jointNum, int8_t PercentageOfAlphaMax, int8_t PercentageOfOmegaMax);
 
 #endif /* OTTO_LIMBS_H_ */

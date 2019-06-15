@@ -5,9 +5,12 @@
  *      Author: Jarosław Królik
  */
 #include "limbs.h"
+#include "servo.h"
 
 void limbs_setPositon_legSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle);
 void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle);
+
+void limbs_setServoParameters(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, type_alpha *alpha_max, type_omega *omega_max);
 
 LimbStatusTypeDef limbs_getJoint(LegJointypeDef **joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum);
 LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef **joint, LegTypeDef *leg, JointNumTypeDef *jointNum);
@@ -28,10 +31,10 @@ void limbs_init(){
 	Legs.right.ankle.servoDirection	= LegServoDirection_RightAnkle;
 	Legs.right.hip.servoDirection	= LegServoDirection_RightHip;
 
-	servo_set_calc_param(Legs.left.ankle.servoNum,servo_DoNotChange,30,200);
-	servo_set_calc_param(Legs.left.hip.servoNum,servo_DoNotChange,10,10);
-	servo_set_calc_param(Legs.right.ankle.servoNum,servo_DoNotChange,30,200);
-	servo_set_calc_param(Legs.right.hip.servoNum,servo_DoNotChange,10,10);
+	limbs_changeSpeed(LegLeft,	JointAnkle,	LimbSpeedVeryFast);
+	limbs_changeSpeed(LegLeft,	JointHip,	LimbSpeedVeryFast);
+	limbs_changeSpeed(LegRight,	JointAnkle,	LimbSpeedVeryFast);
+	limbs_changeSpeed(LegRight,	JointHip,	LimbSpeedVeryFast);
 
 	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 0);
 }
@@ -82,29 +85,49 @@ LimbStatusTypeDef limbs_getStatus(LegNumTypeDef legNum, JointNumTypeDef jointNum
 	if(limbs_getJoint(&joint, &legNum, &jointNum) != LimbOK)
 		return LimbError;
 
-	return servo_get_status(joint->servoNum) != Sevo_OK ? LimbBusy : LimbOK;
+	return servo_get_status(joint->servoNum) != Servo_OK ? LimbBusy : LimbOK;
 }
 
-void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef jointNum, type_n n_min, type_alpha alpha_max, type_omega omega_max){
-	LegJointypeDef *joint = 0;
-	if(limbs_getJoint(&joint, &legNum,&jointNum) != LimbOK)
+void limbs_changeSpeed(LegNumTypeDef legNum, JointNumTypeDef jointNum, LimbSpeedTypeDef speed){
+	switch(speed){
+	case LimbSpeedVeryFast:	limbs_changeSpeedPercentage(legNum, jointNum,100,100); return;
+	case LimbSpeedFast:		limbs_changeSpeedPercentage(legNum, jointNum,60,60); return;
+	case LimbSpeedNormal:	limbs_changeSpeedPercentage(legNum, jointNum,40,40); return;
+	case LimbSpeedSlow:		limbs_changeSpeedPercentage(legNum, jointNum,25,25); return;
+	case LimbSpeedVerySlow:	limbs_changeSpeedPercentage(legNum, jointNum,10,10); return;
+	}
+}
+
+void limbs_changeSpeedPercentage(LegNumTypeDef legNum, JointNumTypeDef jointNum, int8_t PercentageOfAlphaMax, int8_t PercentageOfOmegaMax){
+	if(PercentageOfAlphaMax > 100 || PercentageOfOmegaMax > 100)
 		return;
 
-	uint8_t servo_number = joint->servoNum;
+	type_alpha alpha_max;
+	type_omega omega_max;
 
-	switch(n_min){
-	case PARAMETER_SET_DEFAULT: n_min = servo_SetDefault; break;
-	case PARAMETER_DONT_CHANGE: n_min = servo_DoNotChange; break;
+	switch(PercentageOfAlphaMax){
+	case PARAMETER_SET_DEFAULT: alpha_max = def_alpha_max;							break;
+	case PARAMETER_DONT_CHANGE: alpha_max = servo_DoNotChange; 						break;
+	default: 					alpha_max = PercentageOfAlphaMax * def_alpha_max;	break;
 	}
-	switch(alpha_max){
-	case PARAMETER_SET_DEFAULT: alpha_max = servo_SetDefault; break;
-	case PARAMETER_DONT_CHANGE: alpha_max = servo_DoNotChange; break;
+	switch(PercentageOfOmegaMax){
+	case PARAMETER_SET_DEFAULT: omega_max = def_omega_max;							break;
+	case PARAMETER_DONT_CHANGE: omega_max = servo_DoNotChange; 						break;
+	default: 					omega_max = PercentageOfOmegaMax * def_omega_max;	break;
 	}
-	switch(alpha_max){
-	case PARAMETER_SET_DEFAULT: alpha_max = servo_SetDefault; break;
-	case PARAMETER_DONT_CHANGE: alpha_max = servo_DoNotChange; break;
-	}
-	servo_set_calc_param(servo_number, n_min, alpha_max, omega_max);
+
+	if( (alpha_max < 1 && alpha_max != servo_DoNotChange) || \
+		(omega_max < 1 && omega_max != servo_DoNotChange))
+		return;
+	limbs_setServoParameters(&legNum, &jointNum, &alpha_max, &omega_max);
+}
+
+void limbs_setServoParameters(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, type_alpha *alpha_max, type_omega *omega_max){
+	LegJointypeDef *joint = 0;
+	if(limbs_getJoint(&joint, legNum,jointNum) != LimbOK)
+		return;
+
+	servo_set_calc_param(joint->servoNum, servo_DoNotChange , *alpha_max, *omega_max);
 }
 
 LimbStatusTypeDef limbs_getJoint(LegJointypeDef **joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum){
