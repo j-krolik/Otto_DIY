@@ -10,15 +10,23 @@
 #include "math.h" //sqrt
 #include "tim.h"
 
+/***** functions declaration *****/
+/*** set new position ***/
+int8_t servo_set_position_phi(uint8_t servo_number, type_phi phi_set);
+void set_motion_prm_n(Servo *servo, type_theta theta_eth, type_n n_acc, type_n n_const, _Bool change_theta_sign);
 inline type_phi get_servo_position_enh(Servo *_servo);
 
+inline void servo_set_position_direct(uint8_t servo_number, type_phi positon);
+
+/***** macros *****/
+#define __servo_range_pos(number,param) servo_ ## number ## _range_pos_ ## param
 #define square(_param_) (_param_*_param_)
 
+/***** private variable *****/
 Motion_calculation_prm default_calculation_prm;
 Servo servo[number_of_servos];
 
-//#define __servo_range_pos(number,param) servo_ ## number ## _range_pos_ ## param
-
+/***** functions  *****/
 void servo_init(){
 	default_calculation_prm.n_min = def_n_min;
 	default_calculation_prm.omega_max_enh = def_omega_max * accuracy_multiplier;
@@ -78,11 +86,18 @@ void servo_step_timer_handler(volatile uint8_t *free_servos){
 }
 
 void servo_set_calc_param(uint8_t servo_number, type_n n_min, type_alpha alpha_max, type_omega omega_max){
-	servo[servo_number].calculation_prm.n_min 			= n_min==0 || n_min < default_calculation_prm.n_min? \
-			default_calculation_prm.n_min 			: n_min;
-	servo[servo_number].calculation_prm.alpha_max_enh	= alpha_max==0 || alpha_max*accuracy_multiplier > default_calculation_prm.alpha_max_enh? \
-			default_calculation_prm.alpha_max_enh	: alpha_max*accuracy_multiplier;
-	servo[servo_number].calculation_prm.omega_max_enh	= omega_max==0 || omega_max*accuracy_multiplier > default_calculation_prm.omega_max_enh? \
+	if(n_min != servo_DoNotChange)
+		servo[servo_number].calculation_prm.n_min = \
+			(n_min == servo_SetDefault || n_min < default_calculation_prm.n_min) ? default_calculation_prm.n_min : n_min;
+
+	if(alpha_max != servo_DoNotChange)
+		servo[servo_number].calculation_prm.alpha_max_enh = \
+			(alpha_max == servo_SetDefault || alpha_max*accuracy_multiplier > default_calculation_prm.alpha_max_enh) ? \
+			default_calculation_prm.alpha_max_enh : alpha_max*accuracy_multiplier;
+
+	if(omega_max != servo_DoNotChange)
+		servo[servo_number].calculation_prm.omega_max_enh = \
+			(omega_max == servo_SetDefault || omega_max*accuracy_multiplier > default_calculation_prm.omega_max_enh) ? \
 			default_calculation_prm.omega_max_enh	: omega_max*accuracy_multiplier;
 }
 
@@ -178,8 +193,8 @@ int8_t servo_set_position_phi(uint8_t servo_number, type_phi phi_set_enh){
 
 }
 
-void servo_set_position_direct(uint8_t servo_number, type_phi positon){
-	*(servo[servo_number].prm_it.timer_set_position) = positon;
+type_phi get_servo_position_enh(Servo *_servo){
+	return (type_phi)*(_servo->prm_it.timer_set_position) * accuracy_multiplier;
 }
 
 void set_motion_prm_n(Servo *servo, type_alpha alpha_enh, type_n n_acc, type_n n_const, _Bool change_theta_sign){
@@ -197,13 +212,13 @@ void set_motion_prm_n(Servo *servo, type_alpha alpha_enh, type_n n_acc, type_n n
 	servo->prm_it.in_motion = true;
 }
 
-Servo* get_servo(uint8_t number){
-	return &servo[number];
+void servo_set_position_direct(uint8_t servo_number, type_phi positon){
+	*(servo[servo_number].prm_it.timer_set_position) = positon;
 }
 
-type_phi get_servo_position_enh(Servo *_servo){
-	return (type_phi)*(_servo->prm_it.timer_set_position) * accuracy_multiplier;
-}
+
+
+
 
 
 

@@ -35,15 +35,15 @@ void otto_debugHandler(uint8_t* Buf, uint32_t *Len){
 	if(String_MoveToNextWord(&Buf) != DEBUG_OK)
 		return;
 
-	JointNumTypeDef joint = JoinError;
+	JointNumTypeDef jointNum = JointError;
 
 	if( memcmp(Buf,"ankle ",6) == 0 )
-		joint = JoinAnkle;
+		jointNum = JointAnkle;
 
 	if( memcmp(Buf,"hip ",4) == 0 )
-		joint = JoinHip;
+		jointNum = JointHip;
 
-	if(joint == JoinError)
+	if(jointNum == JointError)
 		return;
 
 	//move pointer to next word
@@ -54,11 +54,7 @@ void otto_debugHandler(uint8_t* Buf, uint32_t *Len){
 	if(value<-90 || value>90)
 		return;
 
-	switch(joint){
-	case JoinAnkle: limbs_setAnklePositon(legNum, value); break;
-	case JoinHip: 	limbs_setHipPositon(legNum, value); break;
-	case JoinError: return;
-	}
+	limbs_setPositon(legNum, jointNum, value);
 }
 
 DebugStatusTypeDef String_MoveToNextWord(uint8_t **pBuffer){

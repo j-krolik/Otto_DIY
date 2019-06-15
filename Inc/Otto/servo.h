@@ -42,14 +42,16 @@
 #define servo_3_range_pos_min 640
 #define servo_3_range_pos_mid 1480
 #define servo_3_range_pos_max 2420
-#define __servo_range_pos(number,param) servo_ ## number ## _range_pos_ ## param
 
-#define type_n uint32_t
-#define type_angle int16_t
-#define type_phi uint32_t
-#define type_theta int32_t
-#define type_omega int32_t
-#define type_alpha int32_t
+#define type_n		int32_t
+#define type_angle	int16_t
+#define type_phi	uint32_t
+#define type_theta	int32_t
+#define type_omega	int32_t
+#define type_alpha	int32_t
+
+#define servo_SetDefault  -1
+#define servo_DoNotChange  0
 
 typedef struct{
 	 _Bool in_motion;
@@ -78,9 +80,9 @@ typedef struct {
 }Position_range;
 
 typedef struct{
-	//parameters changinge when motion
+	//parameters changing when motion
 	volatile Motion_prm_it prm_it;
-	//parameters of calculation
+	//parameters used for calculation
 	Motion_calculation_prm calculation_prm;
 	//calculated parameters before motion
 	Motion_calcuated_prm calcuated_prm;
@@ -100,18 +102,15 @@ void servo_init();
  * (least signified bit is servo number 0, next bit is servo number 1...)
  */
 void servo_step_timer_handler(volatile uint8_t *free_servos);
+
 /*
- * If 0 -> set default parameter
+ * servo_SetDefault, servo_DoNotChange - extra parameters
  */
 void servo_set_calc_param(uint8_t servo_number, type_n n_min, type_alpha alpha_max, type_omega omega_max);
-
+/*
+ * change servo position
+ */
 int8_t servo_set_position(uint8_t servo_number, type_angle angle_set);
-int8_t servo_set_position_phi(uint8_t servo_number, type_phi phi_set);
 
-void servo_set_position_direct(uint8_t servo_number, type_phi positon);
-
-//for debug
-Servo* get_servo(uint8_t number);
-void set_motion_prm_n(Servo *servo, type_theta theta_eth, type_n n_acc, type_n n_const, _Bool change_theta_sign);
 
 #endif /* SERVO_H_ */

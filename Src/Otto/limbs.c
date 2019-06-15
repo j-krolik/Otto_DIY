@@ -5,12 +5,13 @@
  *      Author: Jarosław Królik
  */
 #include "limbs.h"
-#include "servo.h"
 
-//LegTypeDef Legs[2];
+
+LimbStatusTypeDef limbs_getJoint(LegJointypeDef *Joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum);
+LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef *Joint, LegTypeDef *leg, JointNumTypeDef *jointNum);
+LimbStatusTypeDef limbs_getLeg(LegTypeDef *leg, LegNumTypeDef *legNum);
+
 LegsTypeDef Legs;
-
-
 
 void limbs_init(){
 	servo_init();
@@ -25,39 +26,78 @@ void limbs_init(){
 	Legs.right.ankle.servoDirection	= LegServoDirection_RightAnkle;
 	Legs.right.hip.servoDirection	= LegServoDirection_RightHip;
 
-	servo_set_calc_param(Legs.left.ankle.servoNum,0,30,0);
-	servo_set_calc_param(Legs.left.hip.servoNum,0,30,0);
-	servo_set_calc_param(Legs.right.ankle.servoNum,0,30,0);
-	servo_set_calc_param(Legs.right.hip.servoNum,0,30,0);
+	servo_set_calc_param(Legs.left.ankle.servoNum,servo_DoNotChange,30,200);
+	servo_set_calc_param(Legs.left.hip.servoNum,servo_DoNotChange,10,10);
+	servo_set_calc_param(Legs.right.ankle.servoNum,servo_DoNotChange,30,200);
+	servo_set_calc_param(Legs.right.hip.servoNum,servo_DoNotChange,10,10);
 
-	limbs_setHipPositon(LegLeft,0);
-	limbs_setHipPositon(LegRight,0);
-	limbs_setAnklePositon(LegLeft,0);
-	limbs_setAnklePositon(LegRight,0);
+	limbs_setPositon(LegLeft,JointAnkle,0);
+	limbs_setPositon(LegRight,JointAnkle,0);
+	limbs_setPositon(LegLeft,JointHip,0);
+	limbs_setPositon(LegRight,JointHip,0);
 }
 
-void limbs_setAnklePositon(LegNumTypeDef legNum, int16_t angle){
-	LegTypeDef *leg = limbs_getLeg(legNum);
-	if(leg == 0)
+void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle){
+
+	LegJointypeDef *joint = 0;
+	if(limbs_getJoint(joint, &legNum, &jointNum) != LimbOK)
 		return;
-	angle *= leg->ankle.servoDirection;
-	servo_set_position(leg->ankle.servoNum, (type_angle)angle);
+
+	//set correct direction (multiple by 1 or -1)
+	angle *= joint->servoDirection;
+
+	servo_set_position(joint->servoNum, (type_angle)angle);
 }
 
-void limbs_setHipPositon(LegNumTypeDef legNum, int16_t angle){
-	LegTypeDef *leg = limbs_getLeg(legNum);
-	if(leg == 0)
+void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef jointNum, type_n n_min, type_alpha alpha_max, type_omega omega_max){
+	LegJointypeDef *joint = 0;
+	if(limbs_getJoint(joint, &legNum,&jointNum) != LimbOK)
 		return;
-	angle *= leg->hip.servoDirection;
-	servo_set_position(leg->hip.servoNum, (type_angle)angle);
-}
 
+	uint8_t servo_number = joint->servoNum;
 
-LegTypeDef *limbs_getLeg(LegNumTypeDef legNum){
-	switch (legNum){
-	case LegLeft: return &(Legs.left);
-	case LegRight: return &(Legs.right);
-	case LegError: return 0;
+	switch(n_min){
+	case PARAMETER_SET_DEFAULT: n_min = servo_SetDefault; break;
+	case PARAMETER_DONT_CHANGE: n_min = servo_DoNotChange; break;
 	}
-	return 0;
+	switch(alpha_max){
+	case PARAMETER_SET_DEFAULT: alpha_max = servo_SetDefault; break;
+	case PARAMETER_DONT_CHANGE: alpha_max = servo_DoNotChange; break;
+	}
+	switch(alpha_max){
+	case PARAMETER_SET_DEFAULT: alpha_max = servo_SetDefault; break;
+	case PARAMETER_DONT_CHANGE: alpha_max = servo_DoNotChange; break;
+	}
+	servo_set_calc_param(servo_number, n_min, alpha_max, omega_max);
+}
+
+LimbStatusTypeDef limbs_getJoint(LegJointypeDef *Joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum){
+	LegTypeDef *leg = 0;
+	if(limbs_getLeg(leg, legNum) != LimbOK)
+		return LimbError;
+
+	return limbs_getJointFromLeg(Joint, leg, jointNum);
+}
+
+LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef *Joint, LegTypeDef *leg, JointNumTypeDef *jointNum){
+	if(leg == 0)
+		return LegError;
+
+	switch (*jointNum){
+	case JointAnkle:	Joint =  &(leg->ankle); return LimbOK;
+	case JointHip:		Joint =  &(leg->hip);	return LimbOK;
+	case JointError:	Joint =  0;				return LimbError;
+	}
+	Joint =  0;
+	return LimbError;
+}
+
+LimbStatusTypeDef limbs_getLeg(LegTypeDef *leg, LegNumTypeDef *legNum){
+	switch (*legNum){
+	case LegLeft:	leg = &(Legs.left);		return LimbOK;
+	case LegRight:	leg = &(Legs.right);	return LimbOK;
+	case LegError:  leg = 0;				return LimbError;
+	}
+	leg = 0;
+	return LimbError;
 }
