@@ -76,10 +76,7 @@ void limbs_setPositon_legJointSingle(LimbsNumTypeDef *legNum, LimbJointNumTypeDe
 	if(limbs_getJoint(&joint, legNum, jointNum) != LimbOK)
 		return;
 
-	//set correct direction (multiple by 1 or -1)
-	*angle *= joint->servoDirection;
-
-	servo_set_position(joint->servoNum, (type_angle)*angle);
+	servo_set_position(joint->servoNum, (type_angle)(*(angle) * joint->servoDirection));
 }
 
 LimbStatusTypeDef limbs_getStatus(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum){
@@ -93,9 +90,9 @@ LimbStatusTypeDef limbs_getStatus(LimbsNumTypeDef legNum, LimbJointNumTypeDef jo
 void limbs_changeSpeed(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, LimbSpeedTypeDef speed){
 	switch(speed){
 	case LimbSpeedVeryFast:	limbs_changeSpeedPercentage(legNum, jointNum,100,100); return;
-	case LimbSpeedFast:		limbs_changeSpeedPercentage(legNum, jointNum,60,60); return;
-	case LimbSpeedNormal:	limbs_changeSpeedPercentage(legNum, jointNum,40,40); return;
-	case LimbSpeedSlow:		limbs_changeSpeedPercentage(legNum, jointNum,25,25); return;
+	case LimbSpeedFast:		limbs_changeSpeedPercentage(legNum, jointNum,90,70); return;
+	case LimbSpeedNormal:	limbs_changeSpeedPercentage(legNum, jointNum,50,60); return;
+	case LimbSpeedSlow:		limbs_changeSpeedPercentage(legNum, jointNum,30,10); return;
 	case LimbSpeedVerySlow:	limbs_changeSpeedPercentage(legNum, jointNum,10,10); return;
 	}
 }
@@ -108,14 +105,14 @@ void limbs_changeSpeedPercentage(LimbsNumTypeDef legNum, LimbJointNumTypeDef joi
 	type_omega omega_max;
 
 	switch(PercentageOfAlphaMax){
-	case PARAMETER_SET_DEFAULT: alpha_max = def_alpha_max;							break;
-	case PARAMETER_DONT_CHANGE: alpha_max = servo_DoNotChange; 						break;
-	default: 					alpha_max = PercentageOfAlphaMax * def_alpha_max;	break;
+	case PARAMETER_SET_DEFAULT: alpha_max = def_alpha_max;								break;
+	case PARAMETER_DONT_CHANGE: alpha_max = servo_DoNotChange; 							break;
+	default: 					alpha_max = PercentageOfAlphaMax * def_alpha_max / 100;	break;
 	}
 	switch(PercentageOfOmegaMax){
-	case PARAMETER_SET_DEFAULT: omega_max = def_omega_max;							break;
-	case PARAMETER_DONT_CHANGE: omega_max = servo_DoNotChange; 						break;
-	default: 					omega_max = PercentageOfOmegaMax * def_omega_max;	break;
+	case PARAMETER_SET_DEFAULT: omega_max = def_omega_max;								break;
+	case PARAMETER_DONT_CHANGE: omega_max = servo_DoNotChange; 							break;
+	default: 					omega_max = PercentageOfOmegaMax * def_omega_max / 100;	break;
 	}
 
 	if( (alpha_max < 1 && alpha_max != servo_DoNotChange) || \

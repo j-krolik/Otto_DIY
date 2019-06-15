@@ -28,7 +28,7 @@
 #define number_of_servos 4
 #define def_n_min 1
 #define def_omega_max 120 // degrees*10 per time_base (20ms)	60degrees/0,1s
-#define def_alpha_max  60 // degrees*10 per timbe_base squared (20_ms)^2
+#define def_alpha_max  15 // degrees*10 per timbe_base squared (20_ms)^2
 
 #define servo_0_range_pos_min	 580
 #define servo_0_range_pos_mid	1430
