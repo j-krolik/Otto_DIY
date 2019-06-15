@@ -7,9 +7,9 @@
 #include "limbs.h"
 
 
-LimbStatusTypeDef limbs_getJoint(LegJointypeDef *Joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum);
-LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef *Joint, LegTypeDef *leg, JointNumTypeDef *jointNum);
-LimbStatusTypeDef limbs_getLeg(LegTypeDef *leg, LegNumTypeDef *legNum);
+LimbStatusTypeDef limbs_getJoint(LegJointypeDef **joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum);
+LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef **joint, LegTypeDef *leg, JointNumTypeDef *jointNum);
+LimbStatusTypeDef limbs_getLeg(LegTypeDef **leg, LegNumTypeDef *legNum);
 
 LegsTypeDef Legs;
 
@@ -71,33 +71,32 @@ void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef jointNum,
 	servo_set_calc_param(servo_number, n_min, alpha_max, omega_max);
 }
 
-LimbStatusTypeDef limbs_getJoint(LegJointypeDef *Joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum){
-	LegTypeDef *leg = 0;
-	if(limbs_getLeg(leg, legNum) != LimbOK)
+LimbStatusTypeDef limbs_getJoint(LegJointypeDef **joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum){
+	LegTypeDef *leg;
+	if(limbs_getLeg(&leg, legNum) != LimbOK)
 		return LimbError;
-
-	return limbs_getJointFromLeg(Joint, leg, jointNum);
+	return limbs_getJointFromLeg(joint, leg, jointNum);
 }
 
-LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef *Joint, LegTypeDef *leg, JointNumTypeDef *jointNum){
+LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef **joint, LegTypeDef *leg, JointNumTypeDef *jointNum){
 	if(leg == 0)
 		return LegError;
 
 	switch (*jointNum){
-	case JointAnkle:	Joint =  &(leg->ankle); return LimbOK;
-	case JointHip:		Joint =  &(leg->hip);	return LimbOK;
-	case JointError:	Joint =  0;				return LimbError;
+	case JointAnkle:	*joint =  &(leg->ankle);return LimbOK;
+	case JointHip:		*joint =  &(leg->hip);	return LimbOK;
+	case JointError:	*joint =  0;			return LimbError;
 	}
-	Joint =  0;
+	*joint =  0;
 	return LimbError;
 }
 
-LimbStatusTypeDef limbs_getLeg(LegTypeDef *leg, LegNumTypeDef *legNum){
+LimbStatusTypeDef limbs_getLeg(LegTypeDef **leg, LegNumTypeDef *legNum){
 	switch (*legNum){
-	case LegLeft:	leg = &(Legs.left);		return LimbOK;
-	case LegRight:	leg = &(Legs.right);	return LimbOK;
-	case LegError:  leg = 0;				return LimbError;
+	case LegLeft:	*leg = &(Legs.left);	return LimbOK;
+	case LegRight:	*leg = &(Legs.right);	return LimbOK;
+	case LegError:  *leg = 0;				return LimbError;
 	}
-	leg = 0;
+	*leg = 0;
 	return LimbError;
 }
