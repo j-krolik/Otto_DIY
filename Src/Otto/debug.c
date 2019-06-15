@@ -20,7 +20,7 @@ DebugStatusTypeDef String_MoveToNextWord(uint8_t **pBuffer);
 int32_t Word2Num(uint8_t *word, uint8_t base);
 
 void otto_debugHandler(uint8_t* Buf, uint32_t *Len){
-	LegNumTypeDef legNum = LegError;
+	LimbsNumTypeDef legNum = LegError;
 
 	if( memcmp(Buf,"left ",5) == 0 )
 		legNum = LegLeft;
@@ -35,7 +35,7 @@ void otto_debugHandler(uint8_t* Buf, uint32_t *Len){
 	if(String_MoveToNextWord(&Buf) != DEBUG_OK)
 		return;
 
-	JointNumTypeDef jointNum = JointError;
+	LimbJointNumTypeDef jointNum = JointError;
 
 	if( memcmp(Buf,"ankle ",6) == 0 )
 		jointNum = JointAnkle;

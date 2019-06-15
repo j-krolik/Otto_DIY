@@ -7,29 +7,26 @@
 #include "limbs.h"
 #include "servo.h"
 
-void limbs_setPositon_legSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle);
-void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle);
+void limbs_init_value(LimbsJointypeDef *joint, uint8_t sevoNum, int8_t servoDirection);
 
-void limbs_setServoParameters(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, type_alpha *alpha_max, type_omega *omega_max);
+void limbs_setPositon_legSingle(LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum, int16_t *angle);
+void limbs_setPositon_legJointSingle(LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum, int16_t *angle);
 
-LimbStatusTypeDef limbs_getJoint(LegJointypeDef **joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum);
-LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef **joint, LegTypeDef *leg, JointNumTypeDef *jointNum);
-LimbStatusTypeDef limbs_getLeg(LegTypeDef **leg, LegNumTypeDef *legNum);
+void limbs_setServoParameters(LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum, type_alpha *alpha_max, type_omega *omega_max);
 
-LegsTypeDef Legs;
+LimbStatusTypeDef limbs_getJoint(LimbsJointypeDef **joint, LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum);
+LimbStatusTypeDef limbs_getJointFromLimbs(LimbsJointypeDef **joint, LimbsLegTypeDef *leg, LimbJointNumTypeDef *jointNum);
+LimbStatusTypeDef limbs_getLeg(LimbsLegTypeDef **leg, LimbsNumTypeDef *legNum);
+
+LimbsTypeDef Limbs;
 
 void limbs_init(){
 	servo_init();
 
-	Legs.left.ankle.servoNum	= LegServoNum_LeftAnkle;
-	Legs.left.hip.servoNum		= LegServoNum_LeftHip;
-	Legs.right.ankle.servoNum	= LegServoNum_RightAnkle;
-	Legs.right.hip.servoNum		= LegServoNum_RightHip;
-
-	Legs.left.ankle.servoDirection	= LegServoDirection_LeftAnkle;
-	Legs.left.hip.servoDirection	= LegServoDirection_LeftHip;
-	Legs.right.ankle.servoDirection	= LegServoDirection_RightAnkle;
-	Legs.right.hip.servoDirection	= LegServoDirection_RightHip;
+	limbs_init_value(&(Limbs.left.ankle),	LEG_SERVO_NUM_LEFT_ANKLE,	LEG_SERVO_DIRECTION_LEFT_ANKLE);
+	limbs_init_value(&(Limbs.left.hip),		LEG_SERVO_NUM_LEFT_HIP,		LEG_SERVO_DIRECTION_LEFT_HIP);
+	limbs_init_value(&(Limbs.right.ankle),	LEG_SERVO_NUM_RIGHT_ANKLE,	LEG_SERVO_DIRECTION_RIGHT_ANKLE);
+	limbs_init_value(&(Limbs.right.hip),	LEG_SERVO_NUM_RIGHT_HIP,	LEG_SERVO_DIRECTION_RIGHT_HIP);
 
 	limbs_changeSpeed(LegLeft,	JointAnkle,	LimbSpeedVeryFast);
 	limbs_changeSpeed(LegLeft,	JointHip,	LimbSpeedVeryFast);
@@ -39,8 +36,13 @@ void limbs_init(){
 	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 0);
 }
 
-void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle){
-	LegNumTypeDef legTemp;
+void limbs_init_value(LimbsJointypeDef *joint, uint8_t sevoNum, int8_t servoDirection){
+	joint->servoNum = sevoNum;
+	joint->servoDirection = servoDirection;
+}
+
+void limbs_setPositon(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int16_t angle){
+	LimbsNumTypeDef legTemp;
 
 	if(legNum & LegLeft){
 		legTemp = LegLeft;
@@ -52,12 +54,12 @@ void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t an
 	}
 }
 
-void limbs_setPositonSingle(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle){
+void limbs_setPositonSingle(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int16_t angle){
 	limbs_setPositon_legJointSingle(&legNum, &jointNum,&angle);
 }
 
-void limbs_setPositon_legSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle){
-	JointNumTypeDef jointTemp;
+void limbs_setPositon_legSingle(LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum, int16_t *angle){
+	LimbJointNumTypeDef jointTemp;
 
 	if(*jointNum & JointAnkle){
 		jointTemp = JointAnkle;
@@ -69,8 +71,8 @@ void limbs_setPositon_legSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum
 	}
 }
 
-void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle){
-	LegJointypeDef *joint = 0;
+void limbs_setPositon_legJointSingle(LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum, int16_t *angle){
+	LimbsJointypeDef *joint = 0;
 	if(limbs_getJoint(&joint, legNum, jointNum) != LimbOK)
 		return;
 
@@ -80,15 +82,15 @@ void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *joi
 	servo_set_position(joint->servoNum, (type_angle)*angle);
 }
 
-LimbStatusTypeDef limbs_getStatus(LegNumTypeDef legNum, JointNumTypeDef jointNum){
-	LegJointypeDef *joint = 0;
+LimbStatusTypeDef limbs_getStatus(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum){
+	LimbsJointypeDef *joint = 0;
 	if(limbs_getJoint(&joint, &legNum, &jointNum) != LimbOK)
 		return LimbError;
 
 	return servo_get_status(joint->servoNum) != Servo_OK ? LimbBusy : LimbOK;
 }
 
-void limbs_changeSpeed(LegNumTypeDef legNum, JointNumTypeDef jointNum, LimbSpeedTypeDef speed){
+void limbs_changeSpeed(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, LimbSpeedTypeDef speed){
 	switch(speed){
 	case LimbSpeedVeryFast:	limbs_changeSpeedPercentage(legNum, jointNum,100,100); return;
 	case LimbSpeedFast:		limbs_changeSpeedPercentage(legNum, jointNum,60,60); return;
@@ -98,7 +100,7 @@ void limbs_changeSpeed(LegNumTypeDef legNum, JointNumTypeDef jointNum, LimbSpeed
 	}
 }
 
-void limbs_changeSpeedPercentage(LegNumTypeDef legNum, JointNumTypeDef jointNum, int8_t PercentageOfAlphaMax, int8_t PercentageOfOmegaMax){
+void limbs_changeSpeedPercentage(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int8_t PercentageOfAlphaMax, int8_t PercentageOfOmegaMax){
 	if(PercentageOfAlphaMax > 100 || PercentageOfOmegaMax > 100)
 		return;
 
@@ -122,22 +124,22 @@ void limbs_changeSpeedPercentage(LegNumTypeDef legNum, JointNumTypeDef jointNum,
 	limbs_setServoParameters(&legNum, &jointNum, &alpha_max, &omega_max);
 }
 
-void limbs_setServoParameters(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, type_alpha *alpha_max, type_omega *omega_max){
-	LegJointypeDef *joint = 0;
+void limbs_setServoParameters(LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum, type_alpha *alpha_max, type_omega *omega_max){
+	LimbsJointypeDef *joint = 0;
 	if(limbs_getJoint(&joint, legNum,jointNum) != LimbOK)
 		return;
 
 	servo_set_calc_param(joint->servoNum, servo_DoNotChange , *alpha_max, *omega_max);
 }
 
-LimbStatusTypeDef limbs_getJoint(LegJointypeDef **joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum){
-	LegTypeDef *leg;
+LimbStatusTypeDef limbs_getJoint(LimbsJointypeDef **joint, LimbsNumTypeDef *legNum, LimbJointNumTypeDef *jointNum){
+	LimbsLegTypeDef *leg;
 	if(limbs_getLeg(&leg, legNum) != LimbOK)
 		return LimbError;
-	return limbs_getJointFromLeg(joint, leg, jointNum);
+	return limbs_getJointFromLimbs(joint, leg, jointNum);
 }
 
-LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef **joint, LegTypeDef *leg, JointNumTypeDef *jointNum){
+LimbStatusTypeDef limbs_getJointFromLimbs(LimbsJointypeDef **joint, LimbsLegTypeDef *leg, LimbJointNumTypeDef *jointNum){
 	if(leg == 0)
 		return LegError;
 
@@ -150,10 +152,10 @@ LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef **joint, LegTypeDef *leg,
 	return LimbError;
 }
 
-LimbStatusTypeDef limbs_getLeg(LegTypeDef **leg, LegNumTypeDef *legNum){
+LimbStatusTypeDef limbs_getLeg(LimbsLegTypeDef **leg, LimbsNumTypeDef *legNum){
 	switch (*legNum){
-	case LegLeft:	*leg = &(Legs.left);	return LimbOK;
-	case LegRight:	*leg = &(Legs.right);	return LimbOK;
+	case LegLeft:	*leg = &(Limbs.left);	return LimbOK;
+	case LegRight:	*leg = &(Limbs.right);	return LimbOK;
 	case LegError:  *leg = 0;				return LimbError;
 	}
 	*leg = 0;

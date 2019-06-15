@@ -20,13 +20,13 @@ typedef enum{
 	LegLeft  = 0x1u,
 	LegRight = 0x2u,
 	LegError = 0x0u
-}LegNumTypeDef;
+}LimbsNumTypeDef;
 
 typedef enum{
 	JointAnkle	= 0x1u,
 	JointHip	= 0x2u,
 	JointError	= 0x0u
-}JointNumTypeDef;
+}LimbJointNumTypeDef;
 
 typedef enum{
 	LimbSpeedVeryFast	= 0x0u,
@@ -39,36 +39,36 @@ typedef enum{
 typedef struct{
 	uint8_t servoNum;
 	int8_t servoDirection;
-}LegJointypeDef;
+}LimbsJointypeDef;
 
 typedef struct{
-	LegJointypeDef ankle;
-	LegJointypeDef hip;
-}LegTypeDef;
+	LimbsJointypeDef ankle;
+	LimbsJointypeDef hip;
+}LimbsLegTypeDef;
 
 typedef struct{
-	LegTypeDef left;
-	LegTypeDef right;
-}LegsTypeDef;
+	LimbsLegTypeDef left;
+	LimbsLegTypeDef right;
+}LimbsTypeDef;
 
-#define LegServoNum_LeftAnkle	2
-#define LegServoNum_LeftHip		1
-#define LegServoNum_RightAnkle	0
-#define LegServoNum_RightHip	3
+#define LEG_SERVO_NUM_LEFT_ANKLE	2
+#define LEG_SERVO_NUM_LEFT_HIP		1
+#define LEG_SERVO_NUM_RIGHT_ANKLE	0
+#define LEG_SERVO_NUM_RIGHT_HIP		3
 
-#define LegServoDirection_LeftAnkle	-1
-#define LegServoDirection_LeftHip	-1
-#define LegServoDirection_RightAnkle 1
-#define LegServoDirection_RightHip	 1
+#define LEG_SERVO_DIRECTION_LEFT_ANKLE	-1
+#define LEG_SERVO_DIRECTION_LEFT_HIP	-1
+#define LEG_SERVO_DIRECTION_RIGHT_ANKLE	 1
+#define LEG_SERVO_DIRECTION_RIGHT_HIP	 1
 
 #define PARAMETER_SET_DEFAULT -1
 #define PARAMETER_DONT_CHANGE  0
 
 void limbs_init();
-void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
-void limbs_setPositonSingle(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
-LimbStatusTypeDef limbs_getStatus(LegNumTypeDef legNum, JointNumTypeDef jointNum);
-void limbs_changeSpeed(LegNumTypeDef legNum, JointNumTypeDef jointNum, LimbSpeedTypeDef speed);
-void limbs_changeSpeedPercentage(LegNumTypeDef legNum, JointNumTypeDef jointNum, int8_t PercentageOfAlphaMax, int8_t PercentageOfOmegaMax);
+void limbs_setPositon(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int16_t angle);
+void limbs_setPositonSingle(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int16_t angle);
+LimbStatusTypeDef limbs_getStatus(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum);
+void limbs_changeSpeed(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, LimbSpeedTypeDef speed);
+void limbs_changeSpeedPercentage(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int8_t PercentageOfAlphaMax, int8_t PercentageOfOmegaMax);
 
 #endif /* OTTO_LIMBS_H_ */
