@@ -13,8 +13,8 @@
 
 typedef enum{
 	LimbOK		= 0x0u,
-	LimbError	= 0x1u,
-	LimbBusy	= 0x2u
+	LimbBusy	= 0x1u,
+	LimbError	= 0x2u
 }LimbStatusTypeDef;
 
 typedef enum{
@@ -60,6 +60,8 @@ typedef struct{
 void limbs_init();
 void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
 void limbs_setPositonSingle(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
-void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef JointNum, type_n n_min, type_alpha alpha_max, type_omega omega_max);
+LimbStatusTypeDef limbs_getStatus(LegNumTypeDef legNum, JointNumTypeDef jointNum);
+//debug
+//void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef JointNum,???);
 
 #endif /* OTTO_LIMBS_H_ */

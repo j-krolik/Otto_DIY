@@ -53,6 +53,12 @@
 #define servo_SetDefault  -1
 #define servo_DoNotChange  0
 
+typedef enum{
+	Servo_OK	= 0x0u,
+	Servo_Busy	= 0x1u,
+	Servo_Error	= 0x2u
+}ServoStatus;
+
 typedef struct{
 	 _Bool in_motion;
 	type_n n_current;
@@ -107,10 +113,8 @@ void servo_step_timer_handler(volatile uint8_t *free_servos);
  * servo_SetDefault, servo_DoNotChange - extra parameters
  */
 void servo_set_calc_param(uint8_t servo_number, type_n n_min, type_alpha alpha_max, type_omega omega_max);
-/*
- * change servo position
- */
-int8_t servo_set_position(uint8_t servo_number, type_angle angle_set);
 
+int8_t servo_set_position(uint8_t servo_number, type_angle angle_set);
+ServoStatus servo_get_status(uint8_t servo_number);
 
 #endif /* SERVO_H_ */

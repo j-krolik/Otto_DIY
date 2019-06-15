@@ -67,7 +67,6 @@ void limbs_setPositon_legSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum
 }
 
 void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle){
-
 	LegJointypeDef *joint = 0;
 	if(limbs_getJoint(&joint, legNum, jointNum) != LimbOK)
 		return;
@@ -76,6 +75,14 @@ void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *joi
 	*angle *= joint->servoDirection;
 
 	servo_set_position(joint->servoNum, (type_angle)*angle);
+}
+
+LimbStatusTypeDef limbs_getStatus(LegNumTypeDef legNum, JointNumTypeDef jointNum){
+	LegJointypeDef *joint = 0;
+	if(limbs_getJoint(&joint, &legNum, &jointNum) != LimbOK)
+		return LimbError;
+
+	return servo_get_status(joint->servoNum) != Sevo_OK ? LimbBusy : LimbOK;
 }
 
 void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef jointNum, type_n n_min, type_alpha alpha_max, type_omega omega_max){

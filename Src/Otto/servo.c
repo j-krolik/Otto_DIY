@@ -212,6 +212,10 @@ void set_motion_prm_n(Servo *servo, type_alpha alpha_enh, type_n n_acc, type_n n
 	servo->prm_it.in_motion = true;
 }
 
+ServoStatus servo_get_status(uint8_t servo_number){
+	return servo[servo_number].prm_it.in_motion ? Servo_Busy : Servo_OK;
+}
+
 void servo_set_position_direct(uint8_t servo_number, type_phi positon){
 	*(servo[servo_number].prm_it.timer_set_position) = positon;
 }
