@@ -95,46 +95,46 @@ int main(void)
   /* USER CODE BEGIN 2 */
   limbs_init();
   tim_2_start();
-
-  /*servo_set_position(0, 0);
-  servo_set_position(1, 500);
-  servo_set_position(2, 1500);
-  servo_set_position(3, 2500);*/
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	limbs_setAnklePositon(LegLeft,0);
+	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 0);
+	HAL_Delay(1000);
+	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 20);
+	HAL_Delay(1000);
+
+	/*limbs_setAnklePositon(LegLeft,0);
 	limbs_setAnklePositon(LegRight,0);
 	limbs_setHipPositon(LegLeft,0);
 	limbs_setHipPositon(LegRight,0);
 	HAL_Delay(500);
 
 	limbs_setAnklePositon(LegLeft,-25);
-	limbs_setAnklePositon(LegRight,10);
-	HAL_Delay(100);
+	limbs_setAnklePositon(LegRight,8);
+	HAL_Delay(400);
 	limbs_setHipPositon(LegRight,-30);
 	HAL_Delay(200);
 
-	limbs_setAnklePositon(LegLeft,0);
-	limbs_setAnklePositon(LegRight,0);
-	HAL_Delay(100);
-	limbs_setHipPositon(LegRight,0);
-	HAL_Delay(200);
-
-	limbs_setAnklePositon(LegLeft,10);
+	limbs_setAnklePositon(LegLeft,9);
 	limbs_setAnklePositon(LegRight,-25);
-	HAL_Delay(100);
+	HAL_Delay(200);
+	limbs_setHipPositon(LegRight,0);
+
+	HAL_Delay(400);
 	limbs_setHipPositon(LegLeft,-30);
 	HAL_Delay(200);
 
-	limbs_setAnklePositon(LegLeft,0);
-	limbs_setAnklePositon(LegRight,0);
-	HAL_Delay(100);
+	limbs_setAnklePositon(LegLeft,-25);
+	limbs_setAnklePositon(LegRight,8);
+	HAL_Delay(200);
 	limbs_setHipPositon(LegLeft,0);
 	HAL_Delay(200);
+	limbs_setAnklePositon(LegLeft,0);
+	limbs_setAnklePositon(LegRight,0);
+	HAL_Delay(200);*/
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

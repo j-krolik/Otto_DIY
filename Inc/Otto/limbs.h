@@ -59,6 +59,7 @@ typedef struct{
 
 void limbs_init();
 void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
+void limbs_setPositonSingle(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle);
 void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef JointNum, type_n n_min, type_alpha alpha_max, type_omega omega_max);
 
 #endif /* OTTO_LIMBS_H_ */

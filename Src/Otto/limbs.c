@@ -6,6 +6,8 @@
  */
 #include "limbs.h"
 
+void limbs_setPositon_legSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle);
+void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle);
 
 LimbStatusTypeDef limbs_getJoint(LegJointypeDef **joint, LegNumTypeDef *legNum, JointNumTypeDef *jointNum);
 LimbStatusTypeDef limbs_getJointFromLeg(LegJointypeDef **joint, LegTypeDef *leg, JointNumTypeDef *jointNum);
@@ -31,27 +33,54 @@ void limbs_init(){
 	servo_set_calc_param(Legs.right.ankle.servoNum,servo_DoNotChange,30,200);
 	servo_set_calc_param(Legs.right.hip.servoNum,servo_DoNotChange,10,10);
 
-	limbs_setPositon(LegLeft,JointAnkle,0);
-	limbs_setPositon(LegRight,JointAnkle,0);
-	limbs_setPositon(LegLeft,JointHip,0);
-	limbs_setPositon(LegRight,JointHip,0);
+	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 0);
 }
 
 void limbs_setPositon(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle){
+	LegNumTypeDef legTemp;
+
+	if(legNum & LegLeft){
+		legTemp = LegLeft;
+		limbs_setPositon_legSingle(&legTemp,&jointNum,&angle);
+	}
+	if(legNum & LegRight){
+		legTemp = LegRight;
+		limbs_setPositon_legSingle(&legTemp,&jointNum,&angle);
+	}
+}
+
+void limbs_setPositonSingle(LegNumTypeDef legNum, JointNumTypeDef jointNum, int16_t angle){
+	limbs_setPositon_legJointSingle(&legNum, &jointNum,&angle);
+}
+
+void limbs_setPositon_legSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle){
+	JointNumTypeDef jointTemp;
+
+	if(*jointNum & JointAnkle){
+		jointTemp = JointAnkle;
+		limbs_setPositon_legJointSingle(legNum,&jointTemp,angle);
+	}
+	if(*jointNum & JointHip){
+		jointTemp = JointHip;
+		limbs_setPositon_legJointSingle(legNum,&jointTemp,angle);
+	}
+}
+
+void limbs_setPositon_legJointSingle(LegNumTypeDef *legNum, JointNumTypeDef *jointNum, int16_t *angle){
 
 	LegJointypeDef *joint = 0;
-	if(limbs_getJoint(joint, &legNum, &jointNum) != LimbOK)
+	if(limbs_getJoint(&joint, legNum, jointNum) != LimbOK)
 		return;
 
 	//set correct direction (multiple by 1 or -1)
-	angle *= joint->servoDirection;
+	*angle *= joint->servoDirection;
 
-	servo_set_position(joint->servoNum, (type_angle)angle);
+	servo_set_position(joint->servoNum, (type_angle)*angle);
 }
 
 void limbs_changeServoParameters(LegNumTypeDef legNum, JointNumTypeDef jointNum, type_n n_min, type_alpha alpha_max, type_omega omega_max){
 	LegJointypeDef *joint = 0;
-	if(limbs_getJoint(joint, &legNum,&jointNum) != LimbOK)
+	if(limbs_getJoint(&joint, &legNum,&jointNum) != LimbOK)
 		return;
 
 	uint8_t servo_number = joint->servoNum;
