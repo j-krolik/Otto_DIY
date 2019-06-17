@@ -101,10 +101,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 0);
+	/*limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 0);
 	HAL_Delay(1000);
 	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 20);
-	HAL_Delay(1000);
+	HAL_Delay(1000);*/
+	limbs_setPositonMulti(LegLeft|LegRight, JointAnkle, 0);
+	while( limbs_getStatusMulit(LegLeft|LegRight, JointAnkle) == LimbBusy);
+	//HAL_Delay(1000);
+	limbs_setPositonMulti(LegLeft|LegRight, JointAnkle, 20);
+	while( limbs_getStatusMulit(LegLeft|LegRight, JointAnkle) == LimbBusy);
+	//HAL_Delay(1000);
 
 	/*limbs_setAnklePositon(LegLeft,0);
 	limbs_setAnklePositon(LegRight,0);

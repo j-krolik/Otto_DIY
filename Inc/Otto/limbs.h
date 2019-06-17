@@ -11,15 +11,15 @@
 #include "stdint.h" //uint8_t
 
 typedef enum{
-	LimbOK		= 0x0u,
+	LimbOK		= 0x0u, //do not change value
 	LimbBusy	= 0x1u,
 	LimbError	= 0x2u
 }LimbStatusTypeDef;
 
 typedef enum{
-	LegLeft  = 0x1u,
-	LegRight = 0x2u,
-	LegError = 0x0u
+	LegLeft		= 0x1u,
+	LegRight	= 0x2u,
+	LegError	= 0x0u
 }LimbsNumTypeDef;
 
 typedef enum{
@@ -64,11 +64,16 @@ typedef struct{
 #define PARAMETER_SET_DEFAULT -1
 #define PARAMETER_DONT_CHANGE  0
 
+void limbs_setPositon_test(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, int16_t angle);
+
 void limbs_init();
-void limbs_setPositon(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int16_t angle);
-void limbs_setPositonSingle(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int16_t angle);
-LimbStatusTypeDef limbs_getStatus(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum);
-void limbs_changeSpeed(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, LimbSpeedTypeDef speed);
-void limbs_changeSpeedPercentage(LimbsNumTypeDef legNum, LimbJointNumTypeDef jointNum, int8_t PercentageOfAlphaMax, int8_t PercentageOfOmegaMax);
+void limbs_setPositon(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, int16_t angle);
+void limbs_setPositonMulti(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, int16_t angle);
+
+void limbs_changeSpeed(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, LimbSpeedTypeDef speed);
+void limbs_changeSpeedMulti(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, LimbSpeedTypeDef speed);
+
+LimbStatusTypeDef limbs_getStatus(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum);
+LimbStatusTypeDef limbs_getStatusMulit(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum);
 
 #endif /* OTTO_LIMBS_H_ */
