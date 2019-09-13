@@ -63,8 +63,8 @@ void limbs_setPositonMulti(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum
 void limbs_changeSpeed(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, LimbSpeedTypeDef speed){
 	switch(speed){
 	case LimbSpeedVeryFast:	limbs_changeSpeedPercentage(limbNum, jointNum,100,100); return;
-	case LimbSpeedFast:		limbs_changeSpeedPercentage(limbNum, jointNum,90,70); return;
-	case LimbSpeedNormal:	limbs_changeSpeedPercentage(limbNum, jointNum,50,60); return;
+	case LimbSpeedFast:		limbs_changeSpeedPercentage(limbNum, jointNum,90,40); return;
+	case LimbSpeedNormal:	limbs_changeSpeedPercentage(limbNum, jointNum,50,30); return;
 	case LimbSpeedSlow:		limbs_changeSpeedPercentage(limbNum, jointNum,30,10); return;
 	case LimbSpeedVerySlow:	limbs_changeSpeedPercentage(limbNum, jointNum,10,10); return;
 	}
@@ -122,7 +122,7 @@ LimbStatusTypeDef limbs_getStatusMulit(LimbsNumTypeDef limbNum, LimbJointNumType
 	//make pointer of function get status
 	void (*pfunction)(LimbsNumTypeDef*, LimbJointNumTypeDef*, void*) = limbs_functionGetStatus;
 
-	LimbStatusTypeDef status = 0;
+	LimbStatusTypeDef status = LimbOK;
 	//pass function and angle to function which execute function for all limbs and their joint
 	limbs_functionLimbsMultiJointMulti(&limbNum, &jointNum, pfunction, (void*) &status);
 

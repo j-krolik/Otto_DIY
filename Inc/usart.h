@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : TIM.h
+  * File Name          : USART.h
   * Description        : This file provides code for the configuration
-  *                      of the TIM instances.
+  *                      of the USART instances.
   ******************************************************************************
   * @attention
   *
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __tim_H
-#define __tim_H
+#ifndef __usart_H
+#define __usart_H
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -30,27 +30,22 @@
 
 /* USER CODE END Includes */
 
-extern TIM_HandleTypeDef htim3;
+extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
-//OTTO_TIM_servo
-//remember to put servo_step_timer_handler() in TIMx_IRQHandler
-#define OTTO_TIM_HandleServo htim3
-#define OTTO_TIM_servo TIM3
+
 /* USER CODE END Private defines */
 
-void MX_TIM3_Init(void);
-                        
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
-                    
+void MX_USART2_UART_Init(void);
+
 /* USER CODE BEGIN Prototypes */
-void tim_servo_start();
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
-#endif /*__ tim_H */
+#endif /*__ usart_H */
 
 /**
   * @}

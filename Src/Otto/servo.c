@@ -32,11 +32,13 @@ void servo_init(){
 	default_calculation_prm.omega_max_enh = def_omega_max * accuracy_multiplier;
 	default_calculation_prm.alpha_max_enh = def_alpha_max * accuracy_multiplier;
 
-	servo[0].prm_it.timer_set_position = (uint32_t*)&(TIM2->CCR1);
-	servo[1].prm_it.timer_set_position = (uint32_t*)&(TIM2->CCR2);
-	servo[2].prm_it.timer_set_position = (uint32_t*)&(TIM2->CCR3);
-	servo[3].prm_it.timer_set_position = (uint32_t*)&(TIM2->CCR4);
+	//define PWM timer adress
+	servo[0].prm_it.timer_set_position = (uint32_t*)&(OTTO_TIM_servo->CCR1);
+	servo[1].prm_it.timer_set_position = (uint32_t*)&(OTTO_TIM_servo->CCR2);
+	servo[2].prm_it.timer_set_position = (uint32_t*)&(OTTO_TIM_servo->CCR3);
+	servo[3].prm_it.timer_set_position = (uint32_t*)&(OTTO_TIM_servo->CCR4);
 
+	//define servo ranges
 	servo[0].range.phi_min_enh = __servo_range_pos(0,min) * accuracy_multiplier;
 	servo[0].range.phi_mid_enh = __servo_range_pos(0,mid) * accuracy_multiplier;
 	servo[0].range.phi_max_enh = __servo_range_pos(0,max) * accuracy_multiplier;
