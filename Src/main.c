@@ -98,53 +98,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
   limbs_init();
   tim_servo_start();
-  bluetooh_Init();
+  bluetooh_init();
+  commands_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	/*limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 0);
-	HAL_Delay(1000);
-	limbs_setPositon(LegLeft|LegRight, JointAnkle|JointHip, 20);
-	HAL_Delay(1000);*/
-	limbs_setPositonMulti(LegLeft|LegRight, JointAnkle, 0);
-	while( limbs_getStatusMulit(LegLeft|LegRight, JointAnkle) == LimbBusy);
-	//HAL_Delay(1000);
-	limbs_setPositonMulti(LegLeft|LegRight, JointAnkle, 20);
-	while( limbs_getStatusMulit(LegLeft|LegRight, JointAnkle) == LimbBusy);
-	//HAL_Delay(1000);
-
-	/*limbs_setAnklePositon(LegLeft,0);
-	limbs_setAnklePositon(LegRight,0);
-	limbs_setHipPositon(LegLeft,0);
-	limbs_setHipPositon(LegRight,0);
-	HAL_Delay(500);
-
-	limbs_setAnklePositon(LegLeft,-25);
-	limbs_setAnklePositon(LegRight,8);
-	HAL_Delay(400);
-	limbs_setHipPositon(LegRight,-30);
-	HAL_Delay(200);
-
-	limbs_setAnklePositon(LegLeft,9);
-	limbs_setAnklePositon(LegRight,-25);
-	HAL_Delay(200);
-	limbs_setHipPositon(LegRight,0);
-
-	HAL_Delay(400);
-	limbs_setHipPositon(LegLeft,-30);
-	HAL_Delay(200);
-
-	limbs_setAnklePositon(LegLeft,-25);
-	limbs_setAnklePositon(LegRight,8);
-	HAL_Delay(200);
-	limbs_setHipPositon(LegLeft,0);
-	HAL_Delay(200);
-	limbs_setAnklePositon(LegLeft,0);
-	limbs_setAnklePositon(LegRight,0);
-	HAL_Delay(200);*/
+  while (1){
+	  commands_executNext();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

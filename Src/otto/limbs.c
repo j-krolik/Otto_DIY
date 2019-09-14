@@ -53,6 +53,8 @@ void limbs_setPositon(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, int
 }
 
 void limbs_setPositonMulti(LimbsNumTypeDef limbNum, LimbJointNumTypeDef jointNum, int16_t angle){
+	//check if stop
+
 	//make pointer of function set position
 	void (*pfunction)(LimbsNumTypeDef*, LimbJointNumTypeDef*, void*) = limbs_functionSetPositon;
 
