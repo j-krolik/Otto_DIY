@@ -4,8 +4,8 @@
  *  Created on: Jun 12, 2019
  *      Author: Jarosław Królik
  */
+#include <tim/servo.h>
 #include "limbs.h"
-#include "servo.h"
 
 void limbs_initValue(LimbsJointypeDef *joint, uint8_t sevoNum, int8_t servoDirection);
 

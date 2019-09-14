@@ -6,8 +6,8 @@
  */
 
 //#include "main.h"
-#include "servo.h"
 #include "limbs.h"
+#include "servo.h"
 #include <string.h> //strchr
 #include <stdlib.h> //strtol
 

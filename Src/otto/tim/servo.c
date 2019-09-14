@@ -5,7 +5,7 @@
  *      Author: Jarosław Królik
  */
 
-#include <Otto/servo.h>
+#include <tim/servo.h>
 #include "stdbool.h" //_Bool
 #include "math.h" //sqrt
 #include "tim.h"
