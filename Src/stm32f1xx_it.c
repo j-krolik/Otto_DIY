@@ -246,7 +246,10 @@ void USART2_IRQHandler(void)
   UART_HandleTypeDef *huart_temp = &huart2;
   //if we found end of command -> call finish receiving function
   if(huart_temp->pRxBuffPtr[-1] == '>'){
+	  //ok, end of message, call handler
 	  HAL_UART_RxCpltCallback(huart_temp);
+
+	  //yay, now we need make complex clear buffer
 	  uint16_t buffSize = huart_temp->RxXferSize;
 	  uint16_t buffSize_used = buffSize - huart_temp->RxXferCount;
 	  //set initial position of rxBufferPoitner

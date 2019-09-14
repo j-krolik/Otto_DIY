@@ -111,7 +111,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 /********************  USART Callback functions  *******************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart == USART_BLUETOOTH)
-		bluetooth_TransmitEndHandler();
+		bluetooth_transmitEndHandler();
 }
 
 //not configured
@@ -119,7 +119,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart == USART_BLUETOOTH)
-		bluetooth_ReceiveHandler();
+		bluetooth_receiveHandler();
 }
 
 //not configured

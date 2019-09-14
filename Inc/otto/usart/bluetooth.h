@@ -10,9 +10,9 @@
 
 #include "stdint.h" // include data types
 
-void bluetooh_Init(void);
-void bluetooth_TransmitEndHandler(void);
-void bluetooth_ReceiveHandler(void);
-void bluetooth_Send(uint8_t *pData, uint16_t Size);
+void bluetooh_init(void);
+void bluetooth_transmitEndHandler(void);
+void bluetooth_receiveHandler(void);
+void bluetooth_send(uint8_t *pData, uint16_t Size);
 
 #endif /* BLUETOOTH_H_ */

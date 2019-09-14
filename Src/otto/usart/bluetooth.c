@@ -9,8 +9,8 @@
 #include "usart.h"
 
 #include "control_init.h" //OTTO_StatusTypeDef
-#include <string.h> //strchr
-#include <stdlib.h> //strtol
+#include "message.h"	//message_handler
+#include <string.h> //strlen
 
 /* Private define ------------------------------------------------------------*/
 #define UART_RX_buffer_size 30
@@ -31,13 +31,11 @@ uint8_t UART_TX_buffer_tail;
 uint8_t UART_TX_fast_send;
 
 /* Private function prototypes -----------------------------------------------*/
-void bluetooth_SendBufferElement(uint8_t *pData, uint16_t Size);
-void bluetooth_SendCalcLenght(char *pData);
-
-OTTO_StatusTypeDef bluetooth_ReceiveDecode();
+void bluetooth_sendBufferElement(uint8_t *pData, uint16_t Size);
+void bluetooth_sendCalcLenght(char *pData);
 
 /********************  USART initialization  *******************/
-void bluetooh_Init(void){
+void bluetooh_init(void){
 	//MX_USARTx_UART_Init() - was called
 
 	UART_TX_buffer_head = 0;
@@ -49,7 +47,7 @@ void bluetooh_Init(void){
 }
 
 /********************  USART interrupt - finished send buffer element *******************/
-void bluetooth_TransmitEndHandler(){
+void bluetooth_transmitEndHandler(){
 	if(UART_TX_fast_send){
 		UART_TX_fast_send = 0;
 	}else{
@@ -60,25 +58,28 @@ void bluetooth_TransmitEndHandler(){
 			UART_TX_buffer_tail++;
 	}
 
-	//if current tail has not been send, send it
+	//if buffer isn't empty, send next element
 	if(UART_TX_buffer_tail != UART_TX_buffer_head)
-		bluetooth_SendBufferElement(&(UART_TX_buffer[UART_TX_buffer_tail].line[0]), UART_TX_buffer[UART_TX_buffer_tail].size);
+		bluetooth_sendBufferElement(&(UART_TX_buffer[UART_TX_buffer_tail].line[0]), UART_TX_buffer[UART_TX_buffer_tail].size);
 }
 
 /********************  USART interrupt - received data  *******************/
-void bluetooth_ReceiveHandler(){
-	OTTO_StatusTypeDef Status = bluetooth_ReceiveDecode();
-	if(Status == OTTO_OK);
+void bluetooth_receiveHandler(){
+	//decode message
+	message_handler( (uint8_t *)UART_RX_buffer );
+
+	//listening has benn stoped -> start listening
+	HAL_UART_Receive_IT(USART_BLUETOOTH, UART_RX_buffer, UART_RX_buffer_size);
 }
 
 /********************  USART send data  *******************/
-void bluetooth_Send(uint8_t *pData, uint16_t Size){
+void bluetooth_send(uint8_t *pData, uint16_t Size){
 	//if usart is free send direct data
 	HAL_UART_StateTypeDef uartState = HAL_UART_GetState(USART_BLUETOOTH);
 
 	if(UART_TX_buffer_tail == UART_TX_buffer_head && uartState == (HAL_UART_STATE_READY | HAL_UART_STATE_BUSY_RX)){
 		UART_TX_fast_send = 1;
-		bluetooth_SendBufferElement(pData,Size);
+		bluetooth_sendBufferElement(pData,Size);
 		return;
 	}
 	//copy data to buffer
@@ -98,39 +99,17 @@ void bluetooth_Send(uint8_t *pData, uint16_t Size){
 }
 
 /********************  USART private function  *******************/
-void bluetooth_SendBufferElement(uint8_t *pData, uint16_t Size){
+void bluetooth_sendBufferElement(uint8_t *pData, uint16_t Size){
 	HAL_UART_Transmit_IT(USART_BLUETOOTH, pData, Size);
 
 	//turn on listen after transmit
 	HAL_UART_Receive_IT(USART_BLUETOOTH, UART_RX_buffer, UART_RX_buffer_size);
 }
 
-void bluetooth_SendCalcLenght(char *pData){
+void bluetooth_sendCalcLenght(char *pData){
 	uint16_t size = strlen(pData);
 	HAL_UART_Transmit_IT(USART_BLUETOOTH, (uint8_t*)pData, size);
 
 	//turn on listen after transmit
 	HAL_UART_Receive_IT(USART_BLUETOOTH, UART_RX_buffer, UART_RX_buffer_size);
-}
-
-OTTO_StatusTypeDef bluetooth_ReceiveDecode(){
-	/*uint8_t *pDebugRxBuffer = (uint8_t *)UART_RX_buffer;
-
-	if( memcmp(pDebugRxBuffer," ",7) == 0 ){
-		//move pointer to next word
-		if(String_MoveToNextWord(&pDebugRxBuffer) != PD_OK){
-			bluetooth_SendCalcLenght("Can't find parameter after 'Control'\n\r");
-			return PD_ERROR;
-		}
-		return bluetooth_ReceiveDecode_Control(pDebugRxBuffer);
-	}
-	if( memcmp(pDebugRxBuffer,"Unitek ",7) == 0 ){
-		//move pointer to next word
-		if(String_MoveToNextWord(&pDebugRxBuffer) != PD_OK){
-			bluetooth_SendCalcLenght("Can't find parameter after 'Unitek'\n\r");
-			return PD_ERROR;
-		}
-		return bluetooth_ReceiveDecode_Unitek(pDebugRxBuffer);
-	}*/
-	return OTTO_ERROR;
 }
