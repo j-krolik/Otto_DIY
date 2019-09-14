@@ -27,7 +27,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "commands.h"
+#include "bluetooth.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,6 +98,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   limbs_init();
   tim_servo_start();
+  bluetooh_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */

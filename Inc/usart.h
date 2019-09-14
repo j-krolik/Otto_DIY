@@ -33,7 +33,9 @@
 extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
-
+//BLUETOOTH
+//there are also some code in USART2_IRQHandler
+#define USART_BLUETOOTH &huart2
 /* USER CODE END Private defines */
 
 void MX_USART2_UART_Init(void);
